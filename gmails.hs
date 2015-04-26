@@ -16,7 +16,7 @@ url = "https://gmail.com/mail/feed/atom/"
 cacheMaxAge = 30 -- in seconds
 
 main = do ur <- userRequest
-          cache <- (loadCache file :: IO(Cache Label Int))
+          cache <- loadCache file
           maybeCacheHit <- lookupCache cacheMaxAge cache (key ur)
           count <- if isNothing maybeCacheHit
                       then do maybeNetCount <- getFromGoogle ur
@@ -51,6 +51,6 @@ getCount s = HTTP.withManager (HTTP.httpLbs s) >>=
 
 findCount :: String -> Maybe(Int)
 findCount s = matchRegex regex s >>= return . read . (!! 0)
-          where regex = mkRegex "<fullcount>([0-9+])</fullcount>"
+          where regex = mkRegex "<fullcount>([0-9]+)</fullcount>"
 
 -- vim: set et:
