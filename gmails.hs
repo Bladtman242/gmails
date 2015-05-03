@@ -13,13 +13,13 @@ data Request = Request { key :: Label
 
 file = ".cache"
 url = "https://gmail.com/mail/feed/atom/"
-cacheMaxAge = 30 -- in seconds
+cacheMaxAge = 3000 -- in seconds
 
 main = do ur <- userRequest
           cache <- loadCache file
           maybeCacheHit <- lookupCache cacheMaxAge cache (key ur)
           count <- if isNothing maybeCacheHit
-                      then do maybeNetCount <- getFromGoogle ur
+                      then do maybeNetCount <- countFromGoogle ur
                               nCache <- addCache (key ur, fromJust maybeNetCount) cache
                               persistCache file nCache
                               return $ fromJust maybeNetCount
@@ -32,8 +32,8 @@ userRequest = do
         (user,pass) <- getCredentials
         return $ Request label user pass
 
-getFromGoogle :: Request -> IO (Maybe Int)
-getFromGoogle req = HTTP.parseUrl (key req)
+countFromGoogle :: Request -> IO (Maybe Int)
+countFromGoogle req = HTTP.parseUrl (url ++ key req)
                       >>= HTTP.withManager . HTTP.httpLbs . auth req
                         >>= return . findCount . BSLazy.unpack . HTTP.responseBody
                 where auth ur r = HTTP.applyBasicAuth  (username ur) (password ur) r

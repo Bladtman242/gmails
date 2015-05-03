@@ -59,7 +59,7 @@ executable gmails
   -- Other library packages from which modules are imported.
   build-depends:       base >=4.8 && <4.9,
                        http-conduit, bytestring, regex-compat,
-                       time, gmails
+                       handa-gdata >= 0.7.0.3, time, gmails
   
   -- Directories containing source files.
   -- hs-source-dirs:     
