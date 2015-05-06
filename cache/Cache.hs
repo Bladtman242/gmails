@@ -8,6 +8,8 @@ module Cache
 ) where
 
 import qualified Data.Time.Clock.POSIX as Clock (getPOSIXTime, POSIXTime)
+import Control.Exception.Base (catch)
+import Control.Exception
 
 type Time = Double
 
@@ -23,7 +25,10 @@ now :: IO Time
 
 emptyCache = Cache []
 
-loadCache path = readFile path >>= return . read
+loadCache path = fromFile path `catch` recover
+        where fromFile path = readFile path >>= return . read
+              recover :: IOException -> IO(Cache a b)
+              recover _ = return emptyCache
 
 persistCache path = writeFile path . show
 
