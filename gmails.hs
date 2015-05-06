@@ -11,10 +11,9 @@ import Control.Exception
 import System.IO.Unsafe
 import System.Environment (getArgs)
 
-tokenFile =".tokens"
-cacheFile = ".cache"
+tokenFile ="/var/lib/gmails/tokens"
+cacheFile = "/tmp/gmails_hs/cache"
 cacheMaxAge = 3000 -- in seconds
---url = "https://www.googleapis.com/gmail/v1/users/me/messages?fields=resultSizeEstimate&q=is%3Aunread+in%3A_itu&key={YOUR_API_KEY}}"
 url = "https://www.googleapis.com/gmail/v1/users/me/messages"
 
 type Label = String

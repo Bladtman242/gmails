@@ -10,6 +10,8 @@ module Cache
 import qualified Data.Time.Clock.POSIX as Clock (getPOSIXTime, POSIXTime)
 import Control.Exception.Base (catch)
 import Control.Exception
+import System.Directory (createDirectoryIfMissing)
+import System.FilePath.Posix (dropFileName)
 
 type Time = Double
 
@@ -30,7 +32,8 @@ loadCache path = fromFile path `catch` recover
               recover :: IOException -> IO(Cache a b)
               recover _ = return emptyCache
 
-persistCache path = writeFile path . show
+persistCache path cache = let dir = dropFileName path
+                          in createDirectoryIfMissing True dir >> writeFile path (show cache)
 
 lookupCache maxAge (Cache cache) key =
         do currentTime <- now

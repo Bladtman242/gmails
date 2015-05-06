@@ -73,4 +73,6 @@ library
   default-language:    Haskell2010
   build-depends: base
                , time
+               , directory >= 1.2.1.0
+               , filepath >= 1.4.0.0
 
